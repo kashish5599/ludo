@@ -2,15 +2,15 @@
 var i1, i2, i3, i4;
 var txt1, txt2, txt3, txt4;
 txt1 = txt2 = txt3 = txt4 ="";
-alert("Type in the second box to fix the value of dice");
+//alert("Type in the second box to fix the value of dice");
 for (i1=i2=i3=i4=0; i1 < 8; i1++, i2++, i3++, i4++) {
-	if (i1 == 0) txt1 += '<div id="startA"></div>';
+	if (i1 == 0) txt1 += '<div id="startA" style="background-color: red;"></div>';
 	else txt1 += '<div></div>';
-	if (i2 == 5) txt2 += '<div id="endB"></div>';
+	if (i2 == 5) txt2 += '<div id="endB" style="background-color: blue;"></div>';
 	else if (i2 < 6) txt2 += '<div></div>';
-	if (i3 == 7) txt3 += '<div id="startB"></div>';
+	if (i3 == 7) txt3 += '<div id="startB" style="background-color: purple;"></div>';
 	else txt3 += '<div></div>';
-	if (i4 == 0) txt4 += '<div id="endA"></div>';
+	if (i4 == 0) txt4 += '<div id="endA" style="background-color: orange;"></div>';
 	else if (i4 < 6) txt4 += '<div></div>';
 	}
 document.getElementById('row1').innerHTML = txt1;
@@ -19,7 +19,42 @@ document.getElementById('row2').innerHTML = txt3;
 document.getElementById('col2').innerHTML = txt4;
 
 //Main code for the game
-var step = 4.7, finishA = 0, finishB = 0;
+var step = 4.7, finishA = 0, finishB = 0, lastroll = "d1";
+
+function anim (startL, startT, endL, endT, id) {
+	var stepH, stepV;
+	var elem = document.getElementById(id);
+	if (endL > startL) stepH = step;
+	else if (endL == startL) stepH = 0;
+	else stepH = -4.7;
+	if (endT > startT) stepV = step;
+	else if (endT == startT) stepV = 0;
+	else stepV = -4.7;
+	if (startT == 4 || startT == 36.9) var intervalH = setInterval(frameH, 500);
+	else var intervalV = setInterval(frameV, 500);
+	function frameH () {
+		if (startL == endL) {
+			clearInterval(intervalH);
+			if (startT != endT) var intervalV = setInterval(frameV, 500);
+		}
+		else {
+			startL += stepH;
+			startL = (Math.round(startL*10))/10;
+			id.style.left = startL + "vw";
+		}
+	}
+	function frameV () {
+		if (startT == endT) {
+			clearInterval(intervalV);
+			if (startL != endL) var intervalH = setInterval(frameH, 500);
+		}
+		else {
+			startT += stepV;
+			startT = (Math.round(startT*10))/10;
+			id.style.top = startT + "vw";
+		}
+	}
+}
 
 function token(left, top) {
 	this.left = left;
@@ -36,6 +71,17 @@ var startA = new token (18, 4);
 var startB = new token (50.9, 36.9); 
 var pavA = new token (13.3, -0.7);
 var pavB = new token (55.6, 41.6);
+
+function dice (val) {
+	switch (val) {
+		case 1: document.getElementById("d1").style.display = "block"; lastroll = "d1"; break;
+		case 2: document.getElementById("d2").style.display = "block"; lastroll = "d2"; break;
+		case 3: document.getElementById("d3").style.display = "block"; lastroll = "d3"; break;
+		case 4: document.getElementById("d4").style.display = "block"; lastroll = "d4"; break;
+		case 5: document.getElementById("d5").style.display = "block"; lastroll = "d5"; break;
+		case 6: document.getElementById("d6").style.display = "block"; lastroll = "d6"; break;
+	}
+}
 
 function change (turn) {
 	if (turn == "A") {
@@ -248,6 +294,7 @@ function move (val, id) {
 					document.getElementById("tip1").style.display = "inline";
 				   }
 				   else if (JSON.stringify(tkn) == JSON.stringify(endA)) {
+				   	anim(A1.left, A1.top, tkn.left, tkn.top, document.getElementById(id));
 				   	A1.top = 0; A1.left = 0;
 				   	document.getElementById("A1").style.display = "none";
 				   	finishA += 1; finish += 1;
@@ -258,9 +305,8 @@ function move (val, id) {
 				   	}
 				   }
 				   else {
+				   	   anim(A1.left, A1.top, tkn.left, tkn.top, document.getElementById(id));
 					   A1.left = tkn.left; A1.top = tkn.top;
-					   document.getElementById(id).style.left = A1.left + "vw";
-					   document.getElementById(id).style.top = A1.top + "vw";
 					   if (JSON.stringify(A1) == JSON.stringify(B1)) cut ('B1');
 					   else if (JSON.stringify(A1) == JSON.stringify(B2)) cut ('B2');
 					   else if (JSON.stringify(A1) == JSON.stringify(A2)) {
@@ -273,6 +319,7 @@ function move (val, id) {
 					document.getElementById("tip1").style.display = "inline";
 				   }
 				   else if (JSON.stringify(tkn) == JSON.stringify(endA)) {
+				   	anim(A2.left, A2.top, tkn.left, tkn.top, document.getElementById(id));
 				   	A2.top = A1.top; A2.left = A1.left; A1.top = 0; A1.left = 0;
 				   	document.getElementById("A1").style.display = "none";
 				   	document.getElementById("A2").style.left = A2.left + "vw";
@@ -286,9 +333,8 @@ function move (val, id) {
 				   	}
 				   }
 				   else {
+					   anim(A2.left, A2.top, tkn.left, tkn.top, document.getElementById(id));
 					   A2.left = tkn.left; A2.top = tkn.top;
-					   document.getElementById(id).style.left = A2.left + "vw";
-					   document.getElementById(id).style.top = A2.top + "vw";
 					   if (JSON.stringify(A2) == JSON.stringify(B1)) cut ('B1');
 					   else if (JSON.stringify(A2) == JSON.stringify(B2)) cut ('B2');
 					   else if (JSON.stringify(A1) == JSON.stringify(A2)) {
@@ -301,6 +347,7 @@ function move (val, id) {
 					document.getElementById("tip1").style.display = "inline";
 				   }
 				   else if (JSON.stringify(tkn) == JSON.stringify(endB)) {
+				   	anim(B1.left, B1.top, tkn.left, tkn.top, document.getElementById(id));
 				   	B1.top = 0; B1.left = 0;
 				   	document.getElementById("B1").style.display = "none";
 				   	finishB += 1; finish += 1;
@@ -312,9 +359,8 @@ function move (val, id) {
 				   	}
 				   }
 				   else {
+					   anim(B1.left, B1.top, tkn.left, tkn.top, document.getElementById(id));
 					   B1.left = tkn.left; B1.top = tkn.top;
-					   document.getElementById(id).style.left = B1.left + "vw";
-					   document.getElementById(id).style.top = B1.top + "vw";
 					   if (JSON.stringify(A1) == JSON.stringify(B1)) cut ('A1');
 					   if (JSON.stringify(A2) == JSON.stringify(B1)) cut ('A2');
 					   else if (JSON.stringify(B2) == JSON.stringify(B1)){
@@ -327,6 +373,7 @@ function move (val, id) {
 					document.getElementById("tip1").style.display = "inline";
 				   }
 				   else if (JSON.stringify(tkn) == JSON.stringify(endB)) {
+				   	anim(B2.left, B2.top, tkn.left, tkn.top, document.getElementById(id));
 				   	B2.top = B1.top; B2.left = B1.left; B1.top = 0; B1.left = 0;
 				   	document.getElementById("B1").style.display = "none";
 				   	document.getElementById("B2").style.left = B2.left + "vw";
@@ -341,6 +388,7 @@ function move (val, id) {
 				   	}
 				   }
 				   else {
+					   anim(B2.left, B2.top, tkn.left, tkn.top, document.getElementById(id));
 					   B2.left = tkn.left; B2.top = tkn.top;
 					   document.getElementById(id).style.left = B2.left + "vw";
 					   document.getElementById(id).style.top = B2.top + "vw";
@@ -387,7 +435,8 @@ function Rolled() {
 	if (entered_val != "" && (entered_val > 0 && entered_val <= 6)) {
 		val = Number(entered_val);
 	}
-	document.getElementById('val').value = val;
+	document.getElementById(lastroll).style.display = "none";
+	dice(val);
 	document.getElementById("Roll").style.pointerEvents = "none";
 	document.getElementById('entr_val').value = "";
 	document.getElementById("tip1").style.display = "none";
