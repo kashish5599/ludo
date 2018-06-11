@@ -2,7 +2,6 @@
 var i1, i2, i3, i4;
 var txt1, txt2, txt3, txt4;
 txt1 = txt2 = txt3 = txt4 ="";
-//alert("Type in the second box to fix the value of dice");
 for (i1=i2=i3=i4=0; i1 < 8; i1++, i2++, i3++, i4++) {
 	if (i1 == 0) txt1 += '<div id="startA" style="background-color: red;"></div>';
 	else txt1 += '<div></div>';
