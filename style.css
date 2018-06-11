@@ -107,18 +107,20 @@ div h1 {
 #tip1 {
 	position: absolute;
 	left: 25.6vw;
-	top: 30vw;
+	top: 32vw;
 	border: 0.1vw solid black;
 	padding: 1vw;
+	background-color: white;
 	display: none;
 }
 
 #tip2 {
 	position: absolute;
-	left: 31vw;
-	top: 30vw;
+	left: 32.3vw;
+	top: 32vw;
 	border: 0.1vw solid black;
 	padding: 1vw;
+	background-color: white;
 	display: none;
 }
 
