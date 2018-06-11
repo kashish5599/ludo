@@ -94,6 +94,7 @@ div h1 {
 	width: 4.5vw;
 	border: 0.1vw solid black;
 	margin: 0 auto;
+	z-index: 2;
 	text-align: center;
 	font-size: 18px;
 	display: none;
@@ -109,6 +110,7 @@ div h1 {
 	margin: 0 auto;
 	text-align: center;
 	font-size: 18px;
+	z-index: 2;
 	display: none;
 }
 

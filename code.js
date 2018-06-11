@@ -33,7 +33,9 @@ var B2 = new token (55.6, 41.6);
 var endA = new token (18, 8.7);
 var endB = new token (50.9, 32.2);
 var startA = new token (18, 4);
-var startB = new token (50.9, 36.9);
+var startB = new token (50.9, 36.9); 
+var pavA = new token (13.3, -0.7);
+var pavB = new token (55.6, 41.6);
 
 function change (turn) {
 	if (turn == "A") {
@@ -396,17 +398,29 @@ function Rolled() {
 	else if (tkn == '1') {
 		if (val == 6 && finish == 0) {
 			document.getElementById(plyr).style.pointerEvents = "auto";
-			document.getElementById(id1).style.pointerEvents = "auto";
 			document.getElementById(plyr).style.cursor = "pointer";
-			document.getElementById(id1).style.cursor = "pointer";
-			document.getElementById(plyr).onclick = function() {unlock (turn, tkn);};
-			document.getElementById(id1).onclick = function() {move (val, id1);};
+			if ((id1 == "A1" && JSON.stringify(A1) != JSON.stringify(pavA)) || (id1 == "B1" && JSON.stringify(B1) != JSON.stringify(pavB))) {
+				document.getElementById(id1).style.pointerEvents = "auto";
+				document.getElementById(id1).style.cursor = "pointer";
+				document.getElementById(plyr).onclick = function() {unlock (turn, tkn);};
+				document.getElementById(id1).onclick = function() {move (val, id1);};
+			}
+			else {
+				document.getElementById(id2).style.pointerEvents = "auto";
+				document.getElementById(id2).style.cursor = "pointer";
+				document.getElementById(plyr).onclick = function() {unlock (turn, tkn);};
+				document.getElementById(id2).onclick = function() {move (val, id2);};
+			}
 		}
 		else if (val == 6 && finish == 1) {
 			unlock(turn, tkn);
 		}
-		else if (finish != 1) {
-			move(val, id1);
+		else if (finish == 0) {
+			if ((id1 == "A1" && JSON.stringify(A1) != JSON.stringify(pavA)) || (id1 == "B1" && JSON.stringify(B1) != JSON.stringify(pavB))) move(val, id1);
+			else move(val, id2);
+		}
+		else if  (finish == 1) {
+			change (turn);
 		}
 	}
 	else {
